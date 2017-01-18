@@ -2,12 +2,15 @@ package com.duckduckgo.mobile.android.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.view.menu.MenuBuilder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,6 +58,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 
 public class WebFragment extends Fragment {
 
@@ -95,6 +99,7 @@ public class WebFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        DDGControlVar.useExternalBrowser = DDGConstants.ALWAYS_EXTERNAL;
 		if(savedInstanceState!=null) {
 			savedState = true;
 		}
@@ -207,6 +212,9 @@ public class WebFragment extends Fragment {
             case R.id.action_reload:
                 actionReload();
                 overflowMenu.dismiss();
+                return true;
+            case R.id.action_external:
+                actionExternalBrowser();
                 return true;
             case R.id.action_share:
 				actionShare();
@@ -389,7 +397,9 @@ public class WebFragment extends Fragment {
 	public void showWebUrl(String url) {
 		if(DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-			DDGUtils.execIntentIfSafe(context, browserIntent);
+			//DDGUtils.execIntentIfSafe(context, browserIntent);
+            DDGUtils.execUrlIntentIfSafe(context, browserIntent);
+            //DDGUtils.printExternal(context, browserIntent);
 			return;
 		}
 
@@ -447,13 +457,27 @@ public class WebFragment extends Fragment {
 		}
 	}
 
+    private void printExternal() {
+
+    }
+
 	private void actionExternalBrowser() {
 		String webViewUrl = mainWebView.getUrl();
 		if(webViewUrl==null) {
 			webViewUrl = "";
 		}
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webViewUrl));
-		DDGUtils.execIntentIfSafe(getActivity(), browserIntent);
+        PackageManager pm = getContext().getPackageManager();
+        List<ResolveInfo> activities = pm.queryIntentActivities(browserIntent, 0);
+        Log.e("action_external", "action external --------------");
+        for(ResolveInfo resolveInfo : activities) {
+            Log.e("action_external", "new resolve info ------");
+            Log.e("action_external", "resolve info to string"+resolveInfo.toString());
+            Log.e("action_external", "resolve package name"+resolveInfo.resolvePackageName);
+            Log.e("action_external", "resolve info. activity info"+resolveInfo.activityInfo.toString());
+        }
+        //DDGUtils.execIntentIfSafe(getActivity(), browserIntent);
+        DDGUtils.execUrlIntentIfSafe(getActivity(), browserIntent);
 	}
 
 	private void actionReload() {

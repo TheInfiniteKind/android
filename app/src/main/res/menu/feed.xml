@@ -17,12 +17,12 @@
     <item android:id="@+id/action_share"
           android:title="@string/action_share"
           android:orderInCategory="40"
-          app:showAsAction="never" /><!--
+          app:showAsAction="never" />
 
     <item android:id="@+id/action_external"
           android:title="@string/action_view_external"
           android:orderInCategory="50"
-          app:showAsAction="never" />
+          app:showAsAction="never" /><!--
 
     <item android:id="@+id/action_remove_recent"
           android:title="Remove"
