@@ -318,6 +318,7 @@ public final class DDGUtils {
         // Verify it resolves
         PackageManager packageManager = context.getPackageManager();
         List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+        Log.e("execUrlIntentIfSafe", "isIntentSafe, activities: "+activities.size());
         return activities.size() > 0;
     }
 
@@ -334,18 +335,17 @@ public final class DDGUtils {
         List<ResolveInfo> activities = pm.queryIntentActivities(intent, 0);
         Log.e("execUrlIntentIfSafe", "execUrlIntentIfSafe -----------");
         Log.e("execUrlIntentIfSafe", "activities.size(): " + activities.size());
-        Log.e("execUrlIntentIfSafe", "activities.get(0).activityInfo.taskAffinity: " + activities.get(0).activityInfo.taskAffinity);
+        if(activities.size() > 0) {
+            Log.e("execUrlIntentIfSafe", "activities.get(0).activityInfo.taskAffinity: " + activities.get(0).activityInfo.taskAffinity);
+        }
         Log.e("execUrlIntentIfSafe", "context.getPackageName(): " + context.getPackageName());
         if (activities.size() == 1 && activities.get(0).activityInfo.packageName.equals(context.getPackageName())) {
             //this intent will be consumed just by DDG, we should show an intent chooser with other options
-            activities = pm.queryIntentActivities(intent, PackageManager.MATCH_ALL);
-            Log.e("execUrlIntentIfSafe", "this intent will be handled by DDG");
-            //context.startActivity();
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                activities = pm.queryIntentActivities(intent, PackageManager.MATCH_ALL);
+            }
         } else {
             Log.e("execUrlIntentIfSafe", "this intent should be safe");
-
-            //context.startActivity(generateCustomChooserIntent(context, intent));
-            //context.startActivity(generateCustomChooserIntent(context, intent, false));
         }
         Log.e("execUrlIntentIfSafe", "execUrlIntentIfSafe ----------- 2");
         List<ResolveInfo> filteredActivities = new ArrayList<>();
@@ -355,12 +355,12 @@ public final class DDGUtils {
                 filteredActivities.add(activity);
             }
         }
-        //execIntentIfSafe(context, getCustomChooser(context, intent, filteredActivities, "Title"));
-        //execIntentIfSafe(context, getCustomChooser(context, intent, activities, "Title"));
-        execIntentIfSafe(context, intent);
+        execIntentIfSafe(context, getCustomChooser(intent, filteredActivities, "Title"));
+        //execIntentIfSafe(context, getCustomChooser(intent, activities, "Title"));
+        //execIntentIfSafe(context, intent);
     }
 
-    private static Intent getCustomChooser(Context context, Intent baseIntent, List<ResolveInfo> activities, String chooserTitle) {
+    private static Intent getCustomChooser(Intent baseIntent, List<ResolveInfo> activities, String chooserTitle) {
         List<Intent> intents = new ArrayList<>();
         for (ResolveInfo activity : activities) {
             Intent intent = (Intent) baseIntent.clone();
@@ -368,7 +368,8 @@ public final class DDGUtils {
             intent.setClassName(activity.activityInfo.packageName, activity.activityInfo.name);
             intents.add(intent);
         }
-        Intent chooser = Intent.createChooser(new Intent(), chooserTitle);
+        //Intent chooser = Intent.createChooser(new Intent(), chooserTitle);
+        Intent chooser = Intent.createChooser(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? new Intent() : intents.remove(0), chooserTitle);
         chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intents.toArray(new Parcelable[]{}));
         return chooser;
     }

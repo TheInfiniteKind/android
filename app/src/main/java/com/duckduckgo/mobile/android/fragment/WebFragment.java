@@ -202,6 +202,11 @@ public class WebFragment extends Fragment {
             backItem.setEnabled(mainWebView.canGoBack());
             forwardItem.setEnabled(mainWebView.canGoForward());
         }
+		String currentUrl = mainWebView.getUrl();
+		String currentSearch = DDGActionBarManager.getInstance().getSearchField().getTrimmedText();
+		boolean validUrl= (currentUrl != null && currentUrl.length() > 0) || (currentSearch != null && currentSearch.length() > 0);
+		menu.findItem(R.id.action_external).setVisible(validUrl);
+		menu.findItem(R.id.action_share).setVisible(validUrl);
         webMenu = menu;
 	}
 
