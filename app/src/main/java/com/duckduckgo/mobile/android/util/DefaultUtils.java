@@ -32,12 +32,17 @@ public class DefaultUtils {
     public static boolean isDDGDefaultSearch(Context context) {
         //Intent.ACTION_ASSIST is not supported
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            Log.e("ddg_defaults", "isDDGDefaultSearch sdk < 16 -> :( return FALSE");
             return false;
         }
-        //In Marshmallow this will return false, because there is the assistant API available
+        //In Marshmallow this will return false, uncomment the code below after we implement the assistant API
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return false;
+            return false;/*
+            String assistant = Settings.Secure.getString(context.getContentResolver(), "voice_interaction_service");
+            if(assistant == null) {
+                return false;
+            }
+            ComponentName componentName = ComponentName.unflattenFromString(assistant);
+            return componentName != null && componentName.getPackageName().equals(context.getPackageName());*/
         }
         Intent intent = new Intent(Intent.ACTION_ASSIST);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -45,6 +50,7 @@ public class DefaultUtils {
     }
 
     public static void promptDDGAsDefaultBrowser(final Context context) {
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
         new AlertDialog.Builder(context)
                 .setTitle("Browser")
                 .setMessage("Do you want to set DuckDuckGo as the default browser?")
@@ -65,6 +71,27 @@ public class DefaultUtils {
                             context.startActivity(intent);
                         }*/
                         //context.startActivity(intent);
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:"+context.getPackageName()));
+                        context.startActivity(intent);
+                        Toast.makeText(context, "Click on browser app and then select DuckDuckGo", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create().show();
+
+    }
+
+    public static void promptDDGAsDefaultAssistant(final Context context) {
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        new AlertDialog.Builder(context)
+                .setTitle("Assistant")
+                .setMessage("Do you want to set DuckDuckGo as the default assistant?")
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        context.startActivity(new Intent(Settings.ACTION_VOICE_INPUT_SETTINGS));
+                        Toast.makeText(context, "Select DuckDuckGo on Assist app", Toast.LENGTH_LONG).show();
                     }
                 })
                 .setNegativeButton("Cancel", null)
