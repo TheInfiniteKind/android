@@ -83,7 +83,7 @@ public class DefaultUtils {
     }
 
     public static void promptDDGAsDefaultAssistant(final Context context) {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) return;
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
         new AlertDialog.Builder(context)
                 .setTitle("Assistant")
                 .setMessage("Do you want to set DuckDuckGo as the default assistant?")
