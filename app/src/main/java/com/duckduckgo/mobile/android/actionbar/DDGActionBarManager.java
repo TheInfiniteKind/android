@@ -178,11 +178,12 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
             case SCR_WEBVIEW:
                 showSearchField();
 
-                setActionBarMargins(actionButtonVisibleLeftMargin, standardMargin, overflowVisibleRightMargin, standardMargin);
+                //setActionBarMargins(actionButtonVisibleLeftMargin, standardMargin, overflowVisibleRightMargin, standardMargin);
+                setActionBarMargins(standardMargin, standardMargin, overflowVisibleRightMargin, standardMargin);
 
                 setOverflowButton(true);
                 setOverflowButtonMarginTop(false);
-                setBangButton();
+                //setBangButton();
                 setHomeButtonMarginTop(false);
 
                 setProgressBarVisible(true);

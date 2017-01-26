@@ -184,7 +184,7 @@ public class WebFragment extends Fragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         headerMenu = new MenuBuilder(context);
         inflater.inflate(R.menu.web_navigation, headerMenu);
-		inflater.inflate(R.menu.feed, menu);
+		inflater.inflate(R.menu.web, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -271,7 +271,7 @@ public class WebFragment extends Fragment {
         }
 
         webMenu = new MenuBuilder(getActivity());
-        getActivity().getMenuInflater().inflate(R.menu.feed, webMenu);
+        getActivity().getMenuInflater().inflate(R.menu.web, webMenu);
         headerMenu = new MenuBuilder(getActivity());
         getActivity().getMenuInflater().inflate(R.menu.web_navigation, headerMenu);
         mainMenu = new MenuBuilder(getActivity());
