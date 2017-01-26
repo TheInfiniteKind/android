@@ -95,6 +95,23 @@
                   android:configChanges="locale|orientation"
                   android:theme="@android:style/Theme.Dialog"
                   android:taskAffinity="" />
+
+
+
+        <service
+            android:name="com.duckduckgo.mobile.android.assistant.AssistantService"
+            android:permission="android.permission.BIND_VOICE_INTERACTION">
+            <meta-data
+                android:name="android.voice_interaction"
+                android:resource="@xml/assist_service"/>
+            <intent-filter>
+                <action android:name="android.service.voice.VoiceInteractionService"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.duckduckgo.mobile.android.assistant.AssistantSessionService"
+            android:permission="android.permission.BIND_VOICE_INTERACTION"/>
     </application>
 
 </manifest>
