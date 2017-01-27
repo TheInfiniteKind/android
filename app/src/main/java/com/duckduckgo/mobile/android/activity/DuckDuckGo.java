@@ -171,9 +171,6 @@ public class DuckDuckGo extends AppCompatActivity {
 
 		if(savedInstanceState==null) {
 			displayHomeScreen();
-            if(getIntent().getAction().equals(Intent.ACTION_MAIN)) {
-                keyboardService.showKeyboard(getSearchField());
-            }
         }
 
         // global search intent

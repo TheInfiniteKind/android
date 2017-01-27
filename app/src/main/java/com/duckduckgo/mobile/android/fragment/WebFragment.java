@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.view.menu.MenuBuilder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,8 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
-import android.webkit.ValueCallback;
-import android.webkit.WebSettings;
 import android.webkit.WebStorage;
 import android.webkit.WebViewDatabase;
 
@@ -122,6 +119,7 @@ public class WebFragment extends Fragment {
 			urlType = URLTYPE.getByCode(savedInstanceState.getInt("url_type"));
 		} else {
             actionDelete();
+            keyboardService.showKeyboardDelayed(DDGActionBarManager.getInstance().getSearchField());
         }
 	}
 
@@ -214,8 +212,12 @@ public class WebFragment extends Fragment {
         HashMap<Integer, Boolean> newStates;
 		switch(item.getItemId()) {
 			case R.id.action_delete:
-                actionClearBar();
                 actionDelete();
+                actionClearBar();
+                newStates = new HashMap<Integer, Boolean>();
+                newStates.put(R.id.action_back, false);
+                newStates.put(R.id.action_forward, false);
+                BusProvider.getInstance().post(new WebViewUpdateMenuNavigationEvent(newStates));
 				return true;
             case R.id.action_reload:
                 actionReload();
@@ -282,8 +284,6 @@ public class WebFragment extends Fragment {
             });
             mainWebView.setLongClickable(false);
         }
-
-        //actionDelete();
 
         webMenu = new MenuBuilder(getActivity());
         getActivity().getMenuInflater().inflate(R.menu.web, webMenu);
@@ -446,22 +446,28 @@ public class WebFragment extends Fragment {
 	}
 
     private void actionClearBar() {
-        mainWebView.loadUrl("about:blank");
         DDGActionBarManager.getInstance().clearSearchBar();
     }
 
 	private void actionDelete() {
-		Log.e("action_delete", "deleting everything now");
-		CookieManager.getInstance().removeAllCookies(null);
-		CookieManager.getInstance().removeSessionCookies(null);
+        mainWebView.stopLoading();
+        mainWebView.clearHistory();
+        mainWebView.shouldClearHistory = true;
+        mainWebView.loadUrl(DDGWebView.ABOUT_BLANK);
+        mainWebView.clearCache(true);
+        mainWebView.clearFormData();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().removeSessionCookies(null);
+        } else {
+            CookieManager.getInstance().removeAllCookie();
+            CookieManager.getInstance().removeSessionCookie();
+        }
 		WebViewDatabase.getInstance(getContext()).clearHttpAuthUsernamePassword();
 		WebViewDatabase.getInstance(getContext()).clearFormData();
 		WebViewDatabase.getInstance(getContext()).clearUsernamePassword();
         WebStorage.getInstance().deleteAllData();
-		mainWebView.clearCache(true);
-		mainWebView.clearCache();
-		mainWebView.clearBrowserState();
-		mainWebView.clearFormData();
+
 	}
 
 	private void actionShare() {
@@ -513,7 +519,7 @@ public class WebFragment extends Fragment {
 
 	@Subscribe
 	public void onWebViewClearCacheEvent(WebViewClearCacheEvent event) {
-		mainWebView.clearCache();
+		mainWebView.clearCache(true);
 	}
 
 	@Subscribe
