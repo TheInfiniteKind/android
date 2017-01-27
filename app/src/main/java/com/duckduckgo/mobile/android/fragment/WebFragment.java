@@ -8,13 +8,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.view.menu.MenuBuilder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
+import android.webkit.ValueCallback;
+import android.webkit.WebSettings;
+import android.webkit.WebStorage;
+import android.webkit.WebViewDatabase;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
@@ -114,7 +120,9 @@ public class WebFragment extends Fragment {
 		if(savedInstanceState!=null) {
 			mainWebView.restoreState(savedInstanceState);
 			urlType = URLTYPE.getByCode(savedInstanceState.getInt("url_type"));
-		}
+		} else {
+            actionDelete();
+        }
 	}
 
     @Override
@@ -149,6 +157,7 @@ public class WebFragment extends Fragment {
 
 	@Override
 	public void onDestroy() {
+        actionDelete();
 		mainWebView.loadUrl(DDGWebView.ABOUT_BLANK);
 		mainWebView.stopView();
 		mainWebView.setWebViewClient(null);
@@ -204,6 +213,10 @@ public class WebFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
         HashMap<Integer, Boolean> newStates;
 		switch(item.getItemId()) {
+			case R.id.action_delete:
+                actionClearBar();
+                actionDelete();
+				return true;
             case R.id.action_reload:
                 actionReload();
                 overflowMenu.dismiss();
@@ -269,6 +282,8 @@ public class WebFragment extends Fragment {
             });
             mainWebView.setLongClickable(false);
         }
+
+        //actionDelete();
 
         webMenu = new MenuBuilder(getActivity());
         getActivity().getMenuInflater().inflate(R.menu.web, webMenu);
@@ -428,6 +443,25 @@ public class WebFragment extends Fragment {
 		else {
 			new WebViewWebPageMenuDialog(context, webViewUrl).show();
 		}
+	}
+
+    private void actionClearBar() {
+        mainWebView.loadUrl("about:blank");
+        DDGActionBarManager.getInstance().clearSearchBar();
+    }
+
+	private void actionDelete() {
+		Log.e("action_delete", "deleting everything now");
+		CookieManager.getInstance().removeAllCookies(null);
+		CookieManager.getInstance().removeSessionCookies(null);
+		WebViewDatabase.getInstance(getContext()).clearHttpAuthUsernamePassword();
+		WebViewDatabase.getInstance(getContext()).clearFormData();
+		WebViewDatabase.getInstance(getContext()).clearUsernamePassword();
+        WebStorage.getInstance().deleteAllData();
+		mainWebView.clearCache(true);
+		mainWebView.clearCache();
+		mainWebView.clearBrowserState();
+		mainWebView.clearFormData();
 	}
 
 	private void actionShare() {
