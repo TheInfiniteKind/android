@@ -403,7 +403,7 @@ public class WebFragment extends Fragment {
 		if(DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 			//DDGUtils.execIntentIfSafe(context, browserIntent);
-            DDGUtils.execUrlIntentIfSafe(context, browserIntent);
+			DDGUtils.execIntentIfSafe(context, browserIntent, true);
             //DDGUtils.printExternal(context, browserIntent);
 			return;
 		}
@@ -481,8 +481,7 @@ public class WebFragment extends Fragment {
             Log.e("action_external", "resolve package name"+resolveInfo.resolvePackageName);
             Log.e("action_external", "resolve info. activity info"+resolveInfo.activityInfo.toString());
         }
-        //DDGUtils.execIntentIfSafe(getActivity(), browserIntent);
-        DDGUtils.execUrlIntentIfSafe(getActivity(), browserIntent);
+        DDGUtils.execIntentIfSafe(getActivity(), browserIntent, true);
 	}
 
 	private void actionReload() {
