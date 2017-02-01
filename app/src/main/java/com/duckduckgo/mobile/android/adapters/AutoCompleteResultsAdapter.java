@@ -27,6 +27,7 @@ import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.UrlUtils;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -227,7 +228,7 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
                 String body = null;
                 try {
                     String query = URLEncoder.encode(constraint.toString());
-                    body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.AUTO_COMPLETE_URL + query);
+                    body = DDGNetworkConstants.mainClient.doGetString(UrlUtils.AUTO_COMPLETE_URL + query);
                     json = new JSONArray(body);
                 } catch (JSONException jex) {
                     Log.e(TAG, jex.getMessage(), jex);

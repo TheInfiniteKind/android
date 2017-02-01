@@ -36,6 +36,7 @@ import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
+import com.duckduckgo.mobile.android.util.UrlUtils;
 import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
 
@@ -417,7 +418,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
 
         searchField.setFocusable(false);
         searchField.setFocusableInTouchMode(false);
-        searchField.setText(DDGUtils.getUrlToDisplay(text));
+        searchField.setText(UrlUtils.getUrlToDisplay(text));
         searchField.setFocusable(true);
         searchField.setFocusableInTouchMode(true);
 

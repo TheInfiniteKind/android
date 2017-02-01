@@ -47,6 +47,7 @@ import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.URLTYPE;
+import com.duckduckgo.mobile.android.util.UrlUtils;
 import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.webview.DDGWebChromeClient;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
@@ -381,23 +382,7 @@ public class WebFragment extends Fragment {
 		urlType = URLTYPE.SERP;
 
 		if(!savedState){
-            String baseUrl;
-			if(DDGControlVar.regionString.equals("wt-wt")){	// default
-                if(PreferencesManager.getEnableJavascript()) {
-                    baseUrl = DDGConstants.SEARCH_URL;
-                } else {
-                    baseUrl = DDGConstants.SEARCH_URL_JAVASCRIPT_DISABLED;
-                }
-                mainWebView.loadUrl(baseUrl + URLEncoder.encode(term));
-			}
-			else {
-                if(PreferencesManager.getEnableJavascript()) {
-                    baseUrl = DDGConstants.SEARCH_URL;
-                } else {
-                    baseUrl = DDGConstants.SEARCH_URL_JAVASCRIPT_DISABLED;
-                }
-                mainWebView.loadUrl(baseUrl + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString));
-			}
+			mainWebView.loadUrl(UrlUtils.getSearchUrlForTerm(term));
 		}
 	}
 
@@ -408,11 +393,7 @@ public class WebFragment extends Fragment {
 			return;
 		}
 
-		if(DDGUtils.isSerpUrl(url)) {
-			urlType = URLTYPE.SERP;
-		} else {
-			urlType = URLTYPE.WEBPAGE;
-		}
+		urlType = UrlUtils.isSerpUrl(url) ? URLTYPE.SERP : URLTYPE.WEBPAGE;
 
 		if(!savedState) {
 			mainWebView.loadUrl(url);
@@ -437,7 +418,7 @@ public class WebFragment extends Fragment {
 			webViewUrl = "";
 		}
 
-		if(DDGUtils.isSerpUrl(webViewUrl)) {
+		if(UrlUtils.isSerpUrl(webViewUrl)) {
 			new WebViewQueryMenuDialog(context, webViewUrl).show();
 		}
 		else {
@@ -590,11 +571,7 @@ public class WebFragment extends Fragment {
 
 	@Subscribe
 	public void onWebViewOnPageStarted(WebViewOnPageStarted event) {
-		if(DDGUtils.isSerpUrl(event.url)) {
-			urlType = URLTYPE.SERP;
-		} else {
-			urlType = URLTYPE.WEBPAGE;
-		}
+		urlType = UrlUtils.isSerpUrl(event.url) ? URLTYPE.SERP : URLTYPE.WEBPAGE;
 	}
 
 }

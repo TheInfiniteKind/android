@@ -5,11 +5,6 @@ import android.graphics.Typeface;
 public class DDGConstants {
 	public static String USER_AGENT = "DDG-Android-%version";
 
-	public static final String AUTO_COMPLETE_URL = "https://duckduckgo.com/ac/?q=";
-	public static final String SEARCH_URL = "https://www.duckduckgo.com/?ko=-1&q=";
-    public static final String SEARCH_URL_JAVASCRIPT_DISABLED = "https://duckduckgo.com/html/?q=";
-	public static final String SEARCH_URL_ONION = "http://3g2upl4pq6kufc4m.onion/?ko=-1&q=";
-
 	public static final String SOURCE_JSON_PATH = "source.json";
 
     public static final int ALWAYS_INTERNAL = 0;
