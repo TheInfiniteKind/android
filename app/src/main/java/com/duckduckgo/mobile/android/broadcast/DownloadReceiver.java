@@ -14,11 +14,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.DebugLog;
 
 @SuppressLint("NewApi")
 public class DownloadReceiver extends BroadcastReceiver {
@@ -100,7 +100,7 @@ public class DownloadReceiver extends BroadcastReceiver {
 						break;
 					}
 
-					Log.v(TAG, "Download fail reason: " + failedReason);                    	
+					DebugLog.v(TAG, "Download fail reason: " + failedReason);
 				}
 			}
 		}

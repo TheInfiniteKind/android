@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,7 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -62,6 +62,7 @@ import com.duckduckgo.mobile.android.util.AppStateManager;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.DebugLog;
 import com.duckduckgo.mobile.android.util.DisplayStats;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
@@ -97,7 +98,6 @@ public class DuckDuckGo extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "on create");
 
         canCommitFragmentSafely = true;
 
@@ -145,7 +145,6 @@ public class DuckDuckGo extends AppCompatActivity {
         fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                Log.d(TAG, "Fragment Back Stack count: " + fragmentManager.getBackStackEntryCount());
                 showAllFragments();
                 if (fragmentManager.getBackStackEntryCount() > 0) {
                     String tag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
@@ -163,7 +162,6 @@ public class DuckDuckGo extends AppCompatActivity {
 
                         DDGActionBarManager.getInstance().updateActionBar(tag);
                     }
-                    Log.e(TAG, "Fragment Back Stack current tag: " + DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
                     showAllFragments();
                 }
             }
@@ -275,11 +273,11 @@ public class DuckDuckGo extends AppCompatActivity {
     }
 
     public void showAllFragments() {
-        Log.d(TAG, "show all fragments");
+        DebugLog.d(TAG, "show all fragments");
         if(fragmentManager.getFragments()!=null && fragmentManager.getFragments().size()!=0) {
             for (Fragment fragment : fragmentManager.getFragments()) {
                 if(fragment!=null) {
-                    Log.d(TAG, "fragment: " + fragment.getTag() + " - visible: " + fragment.isVisible());
+                    DebugLog.d(TAG, "fragment: " + fragment.getTag() + " - visible: " + fragment.isVisible());
                 }
             }
         }
@@ -293,8 +291,6 @@ public class DuckDuckGo extends AppCompatActivity {
      * @param displayHomeScreen Whether to display home screen
 	 */
 	public void displayScreen(SCREEN screenToDisplay, boolean clean, boolean displayHomeScreen) {
-        Log.d(TAG, "display screen: "+screenToDisplay);
-
         Fragment fragment = null;
         String tag = "";
 
@@ -341,8 +337,6 @@ public class DuckDuckGo extends AppCompatActivity {
     }
 	
 	private void displayHomeScreen() {
-        Log.d(TAG, "display home screen");
-
         DDGControlVar.mDuckDuckGoContainer.currentUrl = "";
         displayScreen(DDGControlVar.START_SCREEN, true, true);
         DDGControlVar.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
@@ -402,7 +396,6 @@ public class DuckDuckGo extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d(TAG, "on new intent: " + intent.toString());
         newIntent = true;
         setIntent(intent);
         processIntent(intent);
@@ -418,8 +411,6 @@ public class DuckDuckGo extends AppCompatActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-        Log.d(TAG, "on resume");
-		
         DDGUtils.displayStats.refreshStats(this);
     }
 
@@ -436,7 +427,6 @@ public class DuckDuckGo extends AppCompatActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
-        Log.d(TAG, "on pause");
         canCommitFragmentSafely = false;
 
         DDGActionBarManager.getInstance().dismissMenu();
@@ -450,7 +440,6 @@ public class DuckDuckGo extends AppCompatActivity {
 		super.onStop();
         BusProvider.getInstance().unregister(this);
         DDGControlVar.mDuckDuckGoContainer.torIntegration.dismissDialogs();
-        Log.d(TAG, "on stop");
 	}
 	
 	@Override
@@ -559,8 +548,6 @@ public class DuckDuckGo extends AppCompatActivity {
     }
 
 	private void changeFragment(Fragment newFragment, String newTag, boolean displayHomeScreen) {
-        Log.d(TAG, "change fragment, new tag: " + newTag);
-        Log.d(TAG, "new tag: " + newTag + " - current tag: " + DDGControlVar.mDuckDuckGoContainer.currentFragmentTag+" - prev tag: "+DDGControlVar.mDuckDuckGoContainer.prevFragmentTag);
         if(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(newTag) && !displayHomeScreen) {
             return;
         }

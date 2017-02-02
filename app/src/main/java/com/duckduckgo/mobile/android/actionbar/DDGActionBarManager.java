@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -160,8 +159,6 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
     }
 
     public void updateActionBar(String tag) {
-        Log.d(TAG, "update actionbar: "+tag);
-
         this.tag = tag;
         SCREEN screen = DDGUtils.getScreenByTag(tag);
 

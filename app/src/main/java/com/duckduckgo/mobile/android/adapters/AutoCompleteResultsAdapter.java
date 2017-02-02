@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.DebugLog;
 import com.duckduckgo.mobile.android.util.UrlUtils;
 import com.squareup.picasso.Picasso;
 
@@ -141,7 +141,6 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
             //Drawable acDrawable = suggestion.getDrawable();
             String imageUrl = suggestion.getImageUrl();
             if(imageUrl != null && imageUrl.length() != 0){// && !imageUrl.contains("search-suggestions_default.png")) {
-                Log.e("aaa", "image url: " + imageUrl);
                 roundTransform.setRadius(holder.icon.getCornerRadius());
                 //scaleTransform.setTarget(holder.icon, 0.6);
                 scaleTransform.setTarget((int) getContext().getResources().getDimension(R.dimen.bang_icon_dimen));
@@ -195,8 +194,8 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
                                 newResults.add(item);
                             }
                         } catch (JSONException e) {
-                            Log.e(TAG, "No JSON Object at index " + i);
-                            Log.e(TAG, "Exception: " + e.getMessage());
+                            DebugLog.e(TAG, "No JSON Object at index " + i);
+                            DebugLog.e(TAG, "Exception: " + e.getMessage());
                             e.printStackTrace();
                         }
                     }
@@ -231,11 +230,11 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
                     body = DDGNetworkConstants.mainClient.doGetString(UrlUtils.AUTO_COMPLETE_URL + query);
                     json = new JSONArray(body);
                 } catch (JSONException jex) {
-                    Log.e(TAG, jex.getMessage(), jex);
+                    DebugLog.e(TAG, jex.getMessage(), jex);
                 } catch (DDGHttpException conException) {
-                    Log.e(TAG, "Unable to execute query" + conException.getMessage(), conException);
+                    DebugLog.e(TAG, "Unable to execute query" + conException.getMessage(), conException);
                 } catch (Exception e) {
-                    Log.e(TAG, e.getMessage(), e);
+                    DebugLog.e(TAG, e.getMessage(), e);
                 }
                 return json;
             }

@@ -13,13 +13,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Environment;
-import android.util.Log;
 import ch.boye.httpclientandroidlib.HttpEntity;
 import ch.boye.httpclientandroidlib.entity.BufferedHttpEntity;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
 
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.DebugLog;
 import com.duckduckgo.mobile.android.util.FileProcessor;
 
 public class FileCache {
@@ -44,7 +44,7 @@ public class FileCache {
 		boolean saved = false;
 		FileOutputStream os = null;
 		try {
-			Log.d("FileCache", "Saving File To Cache " + saveFile.getPath());
+			DebugLog.d("FileCache", "Saving File To Cache " + saveFile.getPath());
 			os = new FileOutputStream(saveFile);
 			bitmap.compress(CompressFormat.PNG, 100, os);
 			os.flush();
@@ -63,7 +63,7 @@ public class FileCache {
 	public Bitmap getBitmapFromImageFile(String name) {		
 		File file = new File(cacheDirectory, name);
 		if (file.exists() && file.isFile()) {
-			Log.d("FileCache", "Getting File from path " + file.getPath());
+			DebugLog.d("FileCache", "Getting File from path " + file.getPath());
 			synchronized (DDGControlVar.DECODE_LOCK) {
 				return DDGUtils.decodeImage(file.getPath());
 			}
@@ -97,7 +97,7 @@ public class FileCache {
 			return true;
 		} catch(Exception e) {
 			e.printStackTrace();
-			Log.e(TAG, "saveHttpEntityToInternal: " + name);
+			DebugLog.e(TAG, "saveHttpEntityToInternal: " + name);
 		}
 		return false;
 	}

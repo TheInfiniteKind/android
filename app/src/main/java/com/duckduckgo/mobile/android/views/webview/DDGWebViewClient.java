@@ -12,7 +12,6 @@ import android.net.MailTo;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
@@ -28,6 +27,7 @@ import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.DebugLog;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 
 public class DDGWebViewClient extends WebViewClient {
@@ -46,7 +46,7 @@ public class DDGWebViewClient extends WebViewClient {
 	}
 	        	        	        	
 	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
-		// Log.i(TAG, "shouldOverrideUrl  " + url);
+		// DebugLog.i(TAG, "shouldOverrideUrl  " + url);
 		
 		if(!fragment.getSavedState() && mLoaded) {
 			// handle mailto: and tel: links with native apps
@@ -174,7 +174,7 @@ public class DDGWebViewClient extends WebViewClient {
 	
 	public void onPageFinished (WebView view, String url) {
 		super.onPageFinished(view, url);
-        Log.e("onpagefinished", "url: " + url);
+        DebugLog.d("onpagefinished", "url: " + url);
         mLoaded = true;
 
 		DDGControlVar.mCleanSearchBar = false;

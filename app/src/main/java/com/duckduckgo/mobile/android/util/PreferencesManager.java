@@ -1,18 +1,9 @@
 package com.duckduckgo.mobile.android.util;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.res.Resources.Theme;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.TypedValue;
 
 import com.duckduckgo.mobile.android.DDGApplication;
-import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 
 public class PreferencesManager {

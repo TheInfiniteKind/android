@@ -38,7 +38,6 @@ import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 import android.view.Window;
 import android.widget.Toast;
 import ch.boye.httpclientandroidlib.HttpEntity;
@@ -175,19 +174,19 @@ public final class DDGUtils {
 			try {
 				entity = DDGNetworkConstants.mainClient.doGet(url);
 				if (entity != null) {																			
-					Log.v("SAVE", "Saving stream to internal file: " + url);
+					DebugLog.v("SAVE", "Saving stream to internal file: " + url);
 					fileCache.saveHttpEntityToCache(targetName, entity);
 			    	return true;
 				}
 			} 
 			catch(DDGHttpException conex) {
-				Log.e(TAG, "Http Call Returned Bad Status. " + conex.getHttpStatus());
+				DebugLog.e(TAG, "Http Call Returned Bad Status. " + conex.getHttpStatus());
 				throw conex;
 			}
 		} catch (DDGHttpException conException) {
-			Log.e(TAG, conException.getMessage(), conException);
+			DebugLog.e(TAG, conException.getMessage(), conException);
 		} catch (Exception e) {
-			Log.e(TAG, e.getMessage(), e);
+			DebugLog.e(TAG, e.getMessage(), e);
 		}
 		
 		return false;

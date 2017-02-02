@@ -3,10 +3,8 @@ package com.duckduckgo.mobile.android.adapters;
 import java.util.HashMap;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.util.Item;
