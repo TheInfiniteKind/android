@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.util;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -50,7 +51,7 @@ public class DefaultUtils {
     }
 
     public static void promptDDGAsDefaultBrowser(final Context context) {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
+        //if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
         new AlertDialog.Builder(context)
                 .setTitle("Browser")
                 .setMessage("Do you want to set DuckDuckGo as the default browser?")
@@ -59,22 +60,18 @@ public class DefaultUtils {
                     public void onClick(DialogInterface dialog, int which) {
                         /* todo check a better way to prompt the user to select DDG as the default app,
                            ACTION_HOME_SETTINGS shows the browser/assistant default app only on M and up (sdk >= 23), is present in lollipop (23 > sdk >= 21) but show just the launcher options, and is unavailable below lollipop (sdk < 21)
-                           ACTION_APPLICATION_DETAILS_SETTINGS show the browser options only in (sdk >= 23)
-                        if(false && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            //Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
-                            Intent intent = new Intent(Settings.ACTION_SEARCH_SETTINGS);
+                           ACTION_APPLICATION_DETAILS_SETTINGS show the browser options only in (sdk >= 23)*/
+                        //if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            Intent intent = new Intent(Settings.ACTION_HOME_SETTINGS);
                             context.startActivity(intent);
                             Toast.makeText(context, "Click on browser app and then select DuckDuckGo", Toast.LENGTH_LONG).show();
                         } else {
-                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            intent.setData(Uri.parse("package:"+context.getPackageName()));
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse("http://duckduckgo.com"));
                             context.startActivity(intent);
-                        }*/
-                        //context.startActivity(intent);
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        intent.setData(Uri.parse("package:"+context.getPackageName()));
-                        context.startActivity(intent);
-                        Toast.makeText(context, "Click on browser app and then select DuckDuckGo", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Click on DDG and Always", Toast.LENGTH_LONG).show();
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -84,6 +81,7 @@ public class DefaultUtils {
 
     public static void promptDDGAsDefaultAssistant(final Context context) {
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
+        //Intent intent = new Intent(Settings.ACTION_SEARCH_SETTINGS);
         new AlertDialog.Builder(context)
                 .setTitle("Assistant")
                 .setMessage("Do you want to set DuckDuckGo as the default assistant?")
