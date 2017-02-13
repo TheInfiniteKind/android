@@ -2,12 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'witness'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.duckduckgo.mobile.android"
         minSdkVersion 9
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 76
         versionName "3.0.14"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -71,9 +71,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:preference-v7:23.1.1'
+    compile 'com.android.support:recyclerview-v7:25.1.1'
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:preference-v7:25.1.1'
     //compile 'com.android.support:preference-v14:23.1.1'
     compile 'ch.acra:acra:4.5.0'
     compile 'com.squareup:otto:1.3.8'
@@ -84,11 +84,23 @@ dependencies {
 
 dependencyVerification {
     verify = [
-            'com.android.support:recyclerview-v7:7606373da0931a1e62588335465a0e390cd676c98117edab29220317495faefd',
-            'com.android.support:appcompat-v7:0a8762214382b7e8d4b989b4ac10b5c846b957d767ccb7bccbc6be5afa885a82',
-            'com.android.support:preference-v7:4b6dabaa4400cbed885c7edc885aa6372468f48d628cc0d4a04b9ccd128ed324',
+            'com.android.support:recyclerview-v7:e3b519f59f05e9765fdc93b88286e4a7b9430f64b6440a03bacb5847daa8e13c',
+            'com.android.support:appcompat-v7:c485c421d73fa5b257fa4c39a31f7e24aeada62451f84b44250b8285b0dc95ae',
+            'com.android.support:preference-v7:444c586ddfe186c61bf89a5d77e07a7237307a8b2b3b08bb7802713f144b1218',
             'ch.acra:acra:b46be215fefd703fe91bd8c2a9f59ba87f28924316c556468c5e6141d1fc87a7',
             'com.squareup:otto:13e2c8f5782de514cb161a1e03cdf394a6933431ce1aa2391f6289005b5a250c',
             'com.squareup.picasso:picasso:233e18f59d25b6aff475df1e01a0661677f88af73838a27eb23aa21b96a3ac6e',
+            'tik_ddg_2017_init_project.app.libs.OnionKit:libnetcipher:ae64a7006b4f71fed961feb7172df402f5f7ef3106e7f5bf4529ab6777231128',
+            'com.android.support:support-annotations:46cc01378ddbefa9d0a6bd46bb3c10b35b06e06e375d41a357c3769ba563e9c6',
+            'com.android.support:support-compat:c5072de567ae6ef711f7a90599e8370aefbece9f4df45407b5802a21714839d9',
+            'com.android.support:support-core-ui:df14d89b20e62b85cc55d5e17442c58d66e032c19833247fb44268f0ae3204b6',
+            'com.android.support:support-v4:b9b0b9220b7ece40cd621ee839d36d8094694151c7d7021ae91e3e7b76c1300f',
+            'com.android.support:support-vector-drawable:58c63db6367691397ce0d534fdef59fe204178af78deb686a0983f3b6556e6e0',
+            'com.android.support:animated-vector-drawable:d59d0161ff90fa04ace30425037c1d5463698f481dbf41a611e4dc622af09553',
+            'org.json:json:03acd6adab2da447f49814751b0e953fb62a6a1023f9d2a705c30a6e3e4638eb',
+            'com.android.support:support-media-compat:84213df60369186320c6b4f3e1d25d1240045d4e5f72275474da0db0b1b62181',
+            'com.android.support:support-core-utils:b7f5449c6c60a813c7f8348cb2ae0d6221d453348af0a4623c2b6c917e64b87c',
+            'com.android.support:support-fragment:dfbe0891ff08b98ed70f4de41b7c597f4ac6d00d4c919534cce14a4007c79fc3',
+
     ]
 }
