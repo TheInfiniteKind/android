@@ -4,7 +4,9 @@ android:
   components:
     # Uncomment the lines below if you want to
     # use the latest revision of Android SDK Tools
+    - tools
     - platform-tools
+    # A second time to install SDK 25: https://github.com/travis-ci/docs-travis-ci-com/issues/779
     - tools
 
     # The BuildTools version used by your project
