@@ -90,7 +90,6 @@ dependencyVerification {
             'ch.acra:acra:b46be215fefd703fe91bd8c2a9f59ba87f28924316c556468c5e6141d1fc87a7',
             'com.squareup:otto:13e2c8f5782de514cb161a1e03cdf394a6933431ce1aa2391f6289005b5a250c',
             'com.squareup.picasso:picasso:233e18f59d25b6aff475df1e01a0661677f88af73838a27eb23aa21b96a3ac6e',
-            'tik_ddg_2017_init_project.app.libs.OnionKit:libnetcipher:ae64a7006b4f71fed961feb7172df402f5f7ef3106e7f5bf4529ab6777231128',
             'com.android.support:support-annotations:46cc01378ddbefa9d0a6bd46bb3c10b35b06e06e375d41a357c3769ba563e9c6',
             'com.android.support:support-compat:c5072de567ae6ef711f7a90599e8370aefbece9f4df45407b5802a21714839d9',
             'com.android.support:support-core-ui:df14d89b20e62b85cc55d5e17442c58d66e032c19833247fb44268f0ae3204b6',
