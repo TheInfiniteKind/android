@@ -9,6 +9,7 @@ import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewQueryMenuAdapter;
 import com.duckduckgo.mobile.android.listener.ExecuteActionOnClickListener;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.UrlUtils;
 
 
 /*
@@ -18,7 +19,7 @@ public final class WebViewQueryMenuDialog extends AlertDialog.Builder{
 	public WebViewQueryMenuDialog(final Context context, String webViewUrl) {
 		super(context);
 
-        final String query = DDGUtils.getQueryIfSerp(webViewUrl);
+        final String query = UrlUtils.getQueryIfSerp(webViewUrl);
         final PageMenuContextAdapter contextAdapter  = new WebViewQueryMenuAdapter(context, android.R.layout.select_dialog_item, android.R.id.text1,
                 query);
 

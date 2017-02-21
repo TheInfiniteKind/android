@@ -14,7 +14,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
+import android.webkit.WebStorage;
+import android.webkit.WebViewDatabase;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
@@ -44,6 +47,7 @@ import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.URLTYPE;
+import com.duckduckgo.mobile.android.util.UrlUtils;
 import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.webview.DDGWebChromeClient;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
@@ -114,7 +118,10 @@ public class WebFragment extends Fragment {
 		if(savedInstanceState!=null) {
 			mainWebView.restoreState(savedInstanceState);
 			urlType = URLTYPE.getByCode(savedInstanceState.getInt("url_type"));
-		}
+		} else {
+            actionDelete();
+            keyboardService.showKeyboardDelayed(DDGActionBarManager.getInstance().getSearchField());
+        }
 	}
 
     @Override
@@ -149,6 +156,7 @@ public class WebFragment extends Fragment {
 
 	@Override
 	public void onDestroy() {
+        actionDelete();
 		mainWebView.loadUrl(DDGWebView.ABOUT_BLANK);
 		mainWebView.stopView();
 		mainWebView.setWebViewClient(null);
@@ -184,7 +192,7 @@ public class WebFragment extends Fragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         headerMenu = new MenuBuilder(context);
         inflater.inflate(R.menu.web_navigation, headerMenu);
-		inflater.inflate(R.menu.feed, menu);
+		inflater.inflate(R.menu.web, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -204,6 +212,14 @@ public class WebFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
         HashMap<Integer, Boolean> newStates;
 		switch(item.getItemId()) {
+			case R.id.action_delete:
+                actionDelete();
+                actionClearBar();
+                newStates = new HashMap<Integer, Boolean>();
+                newStates.put(R.id.action_back, false);
+                newStates.put(R.id.action_forward, false);
+                BusProvider.getInstance().post(new WebViewUpdateMenuNavigationEvent(newStates));
+				return true;
             case R.id.action_reload:
                 actionReload();
                 overflowMenu.dismiss();
@@ -271,7 +287,7 @@ public class WebFragment extends Fragment {
         }
 
         webMenu = new MenuBuilder(getActivity());
-        getActivity().getMenuInflater().inflate(R.menu.feed, webMenu);
+        getActivity().getMenuInflater().inflate(R.menu.web, webMenu);
         headerMenu = new MenuBuilder(getActivity());
         getActivity().getMenuInflater().inflate(R.menu.web_navigation, headerMenu);
         mainMenu = new MenuBuilder(getActivity());
@@ -366,23 +382,7 @@ public class WebFragment extends Fragment {
 		urlType = URLTYPE.SERP;
 
 		if(!savedState){
-            String baseUrl;
-			if(DDGControlVar.regionString.equals("wt-wt")){	// default
-                if(PreferencesManager.getEnableJavascript()) {
-                    baseUrl = DDGConstants.SEARCH_URL;
-                } else {
-                    baseUrl = DDGConstants.SEARCH_URL_JAVASCRIPT_DISABLED;
-                }
-                mainWebView.loadUrl(baseUrl + URLEncoder.encode(term));
-			}
-			else {
-                if(PreferencesManager.getEnableJavascript()) {
-                    baseUrl = DDGConstants.SEARCH_URL;
-                } else {
-                    baseUrl = DDGConstants.SEARCH_URL_JAVASCRIPT_DISABLED;
-                }
-                mainWebView.loadUrl(baseUrl + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString));
-			}
+			mainWebView.loadUrl(UrlUtils.getSearchUrlForTerm(term));
 		}
 	}
 
@@ -393,11 +393,7 @@ public class WebFragment extends Fragment {
 			return;
 		}
 
-		if(DDGUtils.isSerpUrl(url)) {
-			urlType = URLTYPE.SERP;
-		} else {
-			urlType = URLTYPE.WEBPAGE;
-		}
+		urlType = UrlUtils.isSerpUrl(url) ? URLTYPE.SERP : URLTYPE.WEBPAGE;
 
 		if(!savedState) {
 			mainWebView.loadUrl(url);
@@ -422,12 +418,37 @@ public class WebFragment extends Fragment {
 			webViewUrl = "";
 		}
 
-		if(DDGUtils.isSerpUrl(webViewUrl)) {
+		if(UrlUtils.isSerpUrl(webViewUrl)) {
 			new WebViewQueryMenuDialog(context, webViewUrl).show();
 		}
 		else {
 			new WebViewWebPageMenuDialog(context, webViewUrl).show();
 		}
+	}
+
+    private void actionClearBar() {
+        DDGActionBarManager.getInstance().clearSearchBar();
+    }
+
+	private void actionDelete() {
+        mainWebView.stopLoading();
+        mainWebView.clearHistory();
+        mainWebView.shouldClearHistory = true;
+        mainWebView.loadUrl(DDGWebView.ABOUT_BLANK);
+        mainWebView.clearCache(true);
+        mainWebView.clearFormData();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().removeSessionCookies(null);
+        } else {
+            CookieManager.getInstance().removeAllCookie();
+            CookieManager.getInstance().removeSessionCookie();
+        }
+		WebViewDatabase.getInstance(getContext()).clearHttpAuthUsernamePassword();
+		WebViewDatabase.getInstance(getContext()).clearFormData();
+		WebViewDatabase.getInstance(getContext()).clearUsernamePassword();
+        WebStorage.getInstance().deleteAllData();
+
 	}
 
 	private void actionShare() {
@@ -479,7 +500,7 @@ public class WebFragment extends Fragment {
 
 	@Subscribe
 	public void onWebViewClearCacheEvent(WebViewClearCacheEvent event) {
-		mainWebView.clearCache();
+		mainWebView.clearCache(true);
 	}
 
 	@Subscribe
@@ -550,11 +571,7 @@ public class WebFragment extends Fragment {
 
 	@Subscribe
 	public void onWebViewOnPageStarted(WebViewOnPageStarted event) {
-		if(DDGUtils.isSerpUrl(event.url)) {
-			urlType = URLTYPE.SERP;
-		} else {
-			urlType = URLTYPE.WEBPAGE;
-		}
+		urlType = UrlUtils.isSerpUrl(event.url) ? URLTYPE.SERP : URLTYPE.WEBPAGE;
 	}
 
 }

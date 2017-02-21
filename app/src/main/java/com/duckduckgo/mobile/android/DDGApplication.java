@@ -7,7 +7,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.webkit.CookieSyncManager;
 
 import com.duckduckgo.mobile.android.download.FileCache;
@@ -15,6 +14,7 @@ import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.DebugLog;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import org.acra.ACRA;
 import org.acra.ReportField;
@@ -77,7 +77,7 @@ public class DDGApplication extends Application {
 			int appVersionCode = pInfo.versionCode;
 			int oldVersionCode = PreferencesManager.getAppVersionCode();
 
-			Log.v("APP", "oldversion: " + oldVersionCode + " new: " + appVersionCode);
+			DebugLog.v("APP", "oldversion: " + oldVersionCode + " new: " + appVersionCode);
 			if(oldVersionCode == 0 || oldVersionCode != appVersionCode) {				
 				// upgrade
 				onUpgrade(appVersionCode);

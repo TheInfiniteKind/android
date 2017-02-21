@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,6 +35,7 @@ import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
+import com.duckduckgo.mobile.android.util.UrlUtils;
 import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
 
@@ -159,8 +159,6 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
     }
 
     public void updateActionBar(String tag) {
-        Log.d(TAG, "update actionbar: "+tag);
-
         this.tag = tag;
         SCREEN screen = DDGUtils.getScreenByTag(tag);
 
@@ -416,7 +414,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
 
         searchField.setFocusable(false);
         searchField.setFocusableInTouchMode(false);
-        searchField.setText(DDGUtils.getUrlToDisplay(text));
+        searchField.setText(UrlUtils.getUrlToDisplay(text));
         searchField.setFocusable(true);
         searchField.setFocusableInTouchMode(true);
 
